@@ -1,122 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Free Moving Quote | Nationwide Budget Moving</title>
-  <link rel="stylesheet" href="styles.css"/>
-</head>
-<body>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Arial, Helvetica, sans-serif;
+  background:#ffffff;
+  color:#111;
+}
 
-<div class="page">
-  <div class="container">
+.page{
+  padding:40px 0;
+}
 
-    <!-- LEFT CONTENT -->
-    <div class="copy">
-      <h1>Nationwide Long-Distance Moving Quotes</h1>
-      <p class="sub">
-        Compare licensed & insured movers for your interstate move.
-      </p>
+.container{
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  gap:40px;
+  align-items:flex-start;
+}
 
-      <ul class="bullets">
-        <li>✔ Free, no-obligation quotes</li>
-        <li>✔ Licensed & insured movers only</li>
-        <li>✔ Nationwide coverage</li>
-      </ul>
-    </div>
+.copy{
+  flex:1;
+}
 
-    <!-- RIGHT FORM (2MOVERS STYLE) -->
-    <div class="form-box">
-      <div class="form-header">
-        <span>Get a Free Moving Quote</span>
-      </div>
+.copy h1{
+  font-size:38px;
+  margin-bottom:10px;
+}
 
-      <form id="quoteForm">
+.copy .sub{
+  font-size:18px;
+  margin-bottom:20px;
+}
 
-        <!-- STEP 1 -->
-        <div class="step active">
-          <label>Moving From (ZIP Code)</label>
-          <input type="text" placeholder="Enter ZIP code" required />
+.bullets{
+  list-style:none;
+  padding:0;
+}
+.bullets li{
+  margin-bottom:10px;
+  font-size:16px;
+}
 
-          <label>Moving To (ZIP Code)</label>
-          <input type="text" placeholder="Enter ZIP code" required />
+/* FORM BOX */
+.form-box{
+  width:420px;
+  border:1px solid #ddd;
+  background:#fafafa;
+}
 
-          <button type="button" class="btn" onclick="nextStep()">Continue</button>
-        </div>
+.form-header{
+  background:#5b2aa5;
+  color:#fff;
+  padding:15px;
+  font-size:18px;
+  font-weight:bold;
+  text-align:center;
+}
 
-        <!-- STEP 2 -->
-        <div class="step">
-          <label>Home Size</label>
-          <select required>
-            <option value="">Select home size</option>
-            <option>Studio</option>
-            <option>1 Bedroom</option>
-            <option>2 Bedroom</option>
-            <option>3+ Bedroom</option>
-          </select>
+form{
+  padding:20px;
+}
 
-          <label>Move Date</label>
-          <input type="date" required />
+label{
+  font-size:14px;
+  display:block;
+  margin:10px 0 5px;
+}
 
-          <button type="button" class="btn" onclick="nextStep()">Continue</button>
-          <button type="button" class="btn back" onclick="prevStep()">Back</button>
-        </div>
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
 
-        <!-- STEP 3 -->
-        <div class="step">
-          <label>Full Name</label>
-          <input type="text" placeholder="Your name" required />
+.step{display:none}
+.step.active{display:block}
 
-          <label>Email</label>
-          <input type="email" placeholder="you@email.com" required />
+/* BUTTONS */
+.btn{
+  width:100%;
+  margin-top:15px;
+  padding:14px;
+  border:none;
+  background:#ff8a00;
+  color:#111;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-          <label>Phone Number</label>
-          <input type="tel" placeholder="(555) 555-5555" required />
+.btn.back{
+  background:#ddd;
+}
 
-          <button type="submit" class="btn final">Get My Free Quotes</button>
-          <button type="button" class="btn back" onclick="prevStep()">Back</button>
-        </div>
+.btn.final{
+  background:#ff8a00;
+  font-size:18px;
+}
 
-      </form>
-
-      <div class="trust">
-        <span>🔒 Secure</span>
-        <span>No spam</span>
-        <span>No obligation</span>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<script>
-  let step = 0;
-  const steps = document.querySelectorAll(".step");
-
-  function showStep(i){
-    steps.forEach(s => s.classList.remove("active"));
-    steps[i].classList.add("active");
-  }
-
-  function nextStep(){
-    if(step < steps.length - 1){
-      step++;
-      showStep(step);
-    }
-  }
-
-  function prevStep(){
-    if(step > 0){
-      step--;
-      showStep(step);
-    }
-  }
-
-  document.getElementById("quoteForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    alert("Thank you! Your quote request has been received.");
-  });
-</script>
-
-</body>
-</html>
+/* TRUST */
+.trust{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 15px 15px;
+  font-size:12px;
+  color:#555;
+}
