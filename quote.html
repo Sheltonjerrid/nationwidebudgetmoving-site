@@ -6,114 +6,116 @@
   <title>Free Moving Quote | Nationwide Budget Moving</title>
   <link rel="stylesheet" href="styles.css"/>
 </head>
-<body class="lp">
+<body>
 
-  <main class="lp-wrap">
-    <!-- Headline (small, above form — mobile-first) -->
-    <h1 class="lp-title">Nationwide Long-Distance Moving Quotes</h1>
-    <p class="lp-sub">Licensed & insured movers • No obligation</p>
+<div class="page">
+  <div class="container">
 
-    <!-- Progress -->
-    <div class="progress">
-      <div class="progress-bar" id="progressBar"></div>
-      <span class="progress-text" id="progressText">Step 1 of 3</span>
+    <!-- LEFT CONTENT -->
+    <div class="copy">
+      <h1>Nationwide Long-Distance Moving Quotes</h1>
+      <p class="sub">
+        Compare licensed & insured movers for your interstate move.
+      </p>
+
+      <ul class="bullets">
+        <li>✔ Free, no-obligation quotes</li>
+        <li>✔ Licensed & insured movers only</li>
+        <li>✔ Nationwide coverage</li>
+      </ul>
     </div>
 
-    <!-- Multi-step Form -->
-    <form id="multiStepForm" class="card">
-
-      <!-- STEP 1 -->
-      <div class="step active">
-        <label>Where are you moving from?</label>
-        <input type="text" name="from_state" placeholder="From State" required />
-
-        <label>Where are you moving to?</label>
-        <input type="text" name="to_state" placeholder="To State" required />
-
-        <button type="button" class="btn primary" onclick="nextStep()">Continue</button>
+    <!-- RIGHT FORM (2MOVERS STYLE) -->
+    <div class="form-box">
+      <div class="form-header">
+        <span>Get a Free Moving Quote</span>
       </div>
 
-      <!-- STEP 2 -->
-      <div class="step">
-        <label>Home size</label>
-        <select name="home_size" required>
-          <option value="">Select home size</option>
-          <option>Studio</option>
-          <option>1 Bedroom</option>
-          <option>2 Bedroom</option>
-          <option>3+ Bedroom</option>
-        </select>
+      <form id="quoteForm">
 
-        <label>Move date</label>
-        <input type="date" name="move_date" required />
+        <!-- STEP 1 -->
+        <div class="step active">
+          <label>Moving From (ZIP Code)</label>
+          <input type="text" placeholder="Enter ZIP code" required />
 
-        <button type="button" class="btn primary" onclick="nextStep()">Continue</button>
-        <button type="button" class="btn ghost" onclick="prevStep()">Back</button>
+          <label>Moving To (ZIP Code)</label>
+          <input type="text" placeholder="Enter ZIP code" required />
+
+          <button type="button" class="btn" onclick="nextStep()">Continue</button>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step">
+          <label>Home Size</label>
+          <select required>
+            <option value="">Select home size</option>
+            <option>Studio</option>
+            <option>1 Bedroom</option>
+            <option>2 Bedroom</option>
+            <option>3+ Bedroom</option>
+          </select>
+
+          <label>Move Date</label>
+          <input type="date" required />
+
+          <button type="button" class="btn" onclick="nextStep()">Continue</button>
+          <button type="button" class="btn back" onclick="prevStep()">Back</button>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step">
+          <label>Full Name</label>
+          <input type="text" placeholder="Your name" required />
+
+          <label>Email</label>
+          <input type="email" placeholder="you@email.com" required />
+
+          <label>Phone Number</label>
+          <input type="tel" placeholder="(555) 555-5555" required />
+
+          <button type="submit" class="btn final">Get My Free Quotes</button>
+          <button type="button" class="btn back" onclick="prevStep()">Back</button>
+        </div>
+
+      </form>
+
+      <div class="trust">
+        <span>🔒 Secure</span>
+        <span>No spam</span>
+        <span>No obligation</span>
       </div>
-
-      <!-- STEP 3 -->
-      <div class="step">
-        <label>Full name</label>
-        <input type="text" name="full_name" placeholder="Your name" required />
-
-        <label>Email</label>
-        <input type="email" name="email" placeholder="you@email.com" required />
-
-        <label>Phone</label>
-        <input type="tel" name="phone" placeholder="(555) 555-5555" required />
-
-        <button type="submit" class="btn primary big">Get My Quotes</button>
-        <button type="button" class="btn ghost" onclick="prevStep()">Back</button>
-      </div>
-
-    </form>
-
-    <!-- Trust strip -->
-    <div class="trust">
-      <span>✔ Nationwide Coverage</span>
-      <span>✔ Licensed Movers</span>
-      <span>✔ No Spam</span>
     </div>
-  </main>
+
+  </div>
+</div>
 
 <script>
-  let currentStep = 0;
-  const steps = document.querySelectorAll('.step');
-  const progressBar = document.getElementById('progressBar');
-  const progressText = document.getElementById('progressText');
+  let step = 0;
+  const steps = document.querySelectorAll(".step");
 
-  function updateProgress() {
-    const pct = ((currentStep + 1) / steps.length) * 100;
-    progressBar.style.width = pct + '%';
-    progressText.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+  function showStep(i){
+    steps.forEach(s => s.classList.remove("active"));
+    steps[i].classList.add("active");
   }
 
-  function showStep(i) {
-    steps.forEach(s => s.classList.remove('active'));
-    steps[i].classList.add('active');
-    updateProgress();
-  }
-
-  function nextStep() {
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      showStep(currentStep);
+  function nextStep(){
+    if(step < steps.length - 1){
+      step++;
+      showStep(step);
     }
   }
 
-  function prevStep() {
-    if (currentStep > 0) {
-      currentStep--;
-      showStep(currentStep);
+  function prevStep(){
+    if(step > 0){
+      step--;
+      showStep(step);
     }
   }
 
-  document.getElementById('multiStepForm').addEventListener('submit', function(e){
+  document.getElementById("quoteForm").addEventListener("submit", function(e){
     e.preventDefault();
-    alert('Thanks! Your request has been received.');
+    alert("Thank you! Your quote request has been received.");
   });
-
-  updateProgress();
 </script>
 
 </body>
