@@ -3,33 +3,118 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Get a Moving Quote | Nationwide Budget Moving</title>
+  <title>Free Moving Quote | Nationwide Budget Moving</title>
   <link rel="stylesheet" href="styles.css"/>
 </head>
-<body>
+<body class="lp">
 
-<section class="form-container">
-  <h1>Get Your Free Moving Quote</h1>
-  <p>Tell us about your move. We’ll handle the rest.</p>
+  <main class="lp-wrap">
+    <!-- Headline (small, above form — mobile-first) -->
+    <h1 class="lp-title">Nationwide Long-Distance Moving Quotes</h1>
+    <p class="lp-sub">Licensed & insured movers • No obligation</p>
 
-  <form>
-    <input type="text" placeholder="From State" required />
-    <input type="text" placeholder="To State" required />
-    <input type="date" required />
-    <select required>
-      <option value="">Home Size</option>
-      <option>Studio</option>
-      <option>1 Bedroom</option>
-      <option>2 Bedroom</option>
-      <option>3+ Bedroom</option>
-    </select>
-    <input type="text" placeholder="Full Name" required />
-    <input type="email" placeholder="Email" required />
-    <input type="tel" placeholder="Phone Number" required />
-    <button type="submit">Get My Quotes</button>
-  </form>
-</section>
+    <!-- Progress -->
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+      <span class="progress-text" id="progressText">Step 1 of 3</span>
+    </div>
+
+    <!-- Multi-step Form -->
+    <form id="multiStepForm" class="card">
+
+      <!-- STEP 1 -->
+      <div class="step active">
+        <label>Where are you moving from?</label>
+        <input type="text" name="from_state" placeholder="From State" required />
+
+        <label>Where are you moving to?</label>
+        <input type="text" name="to_state" placeholder="To State" required />
+
+        <button type="button" class="btn primary" onclick="nextStep()">Continue</button>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step">
+        <label>Home size</label>
+        <select name="home_size" required>
+          <option value="">Select home size</option>
+          <option>Studio</option>
+          <option>1 Bedroom</option>
+          <option>2 Bedroom</option>
+          <option>3+ Bedroom</option>
+        </select>
+
+        <label>Move date</label>
+        <input type="date" name="move_date" required />
+
+        <button type="button" class="btn primary" onclick="nextStep()">Continue</button>
+        <button type="button" class="btn ghost" onclick="prevStep()">Back</button>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step">
+        <label>Full name</label>
+        <input type="text" name="full_name" placeholder="Your name" required />
+
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@email.com" required />
+
+        <label>Phone</label>
+        <input type="tel" name="phone" placeholder="(555) 555-5555" required />
+
+        <button type="submit" class="btn primary big">Get My Quotes</button>
+        <button type="button" class="btn ghost" onclick="prevStep()">Back</button>
+      </div>
+
+    </form>
+
+    <!-- Trust strip -->
+    <div class="trust">
+      <span>✔ Nationwide Coverage</span>
+      <span>✔ Licensed Movers</span>
+      <span>✔ No Spam</span>
+    </div>
+  </main>
+
+<script>
+  let currentStep = 0;
+  const steps = document.querySelectorAll('.step');
+  const progressBar = document.getElementById('progressBar');
+  const progressText = document.getElementById('progressText');
+
+  function updateProgress() {
+    const pct = ((currentStep + 1) / steps.length) * 100;
+    progressBar.style.width = pct + '%';
+    progressText.textContent = `Step ${currentStep + 1} of ${steps.length}`;
+  }
+
+  function showStep(i) {
+    steps.forEach(s => s.classList.remove('active'));
+    steps[i].classList.add('active');
+    updateProgress();
+  }
+
+  function nextStep() {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep(currentStep);
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep(currentStep);
+    }
+  }
+
+  document.getElementById('multiStepForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    alert('Thanks! Your request has been received.');
+  });
+
+  updateProgress();
+</script>
 
 </body>
 </html>
-
