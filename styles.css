@@ -1,72 +1,47 @@
 *{box-sizing:border-box}
+:root{
+  --purple:#5b2aa5;
+  --purple-dark:#3e1b73;
+  --orange:#ff8a00;
+  --border:#d9d9d9;
+  --text:#111;
+  --muted:#555;
+}
 body{
   margin:0;
   font-family: Arial, Helvetica, sans-serif;
-  background:#ffffff;
-  color:#111;
+  color:var(--text);
+  background:#fff;
 }
 
-.page{
-  padding:40px 0;
-}
-
-.container{
+/* Layout */
+.lp{
   max-width:1100px;
   margin:0 auto;
-  display:flex;
-  gap:40px;
-  align-items:flex-start;
+  padding:16px;
 }
-
-.copy{
-  flex:1;
-}
-
-.copy h1{
-  font-size:38px;
-  margin-bottom:10px;
-}
-
-.copy .sub{
-  font-size:18px;
-  margin-bottom:20px;
-}
-
-.bullets{
-  list-style:none;
-  padding:0;
-}
-.bullets li{
-  margin-bottom:10px;
-  font-size:16px;
-}
-
-/* FORM BOX */
-.form-box{
-  width:420px;
-  border:1px solid #ddd;
+.box{
+  border:1px solid var(--border);
   background:#fafafa;
 }
-
-.form-header{
-  background:#5b2aa5;
+.box-head{
+  background:var(--purple);
   color:#fff;
-  padding:15px;
-  font-size:18px;
-  font-weight:bold;
+  padding:14px;
   text-align:center;
+  font-weight:bold;
+  font-size:18px;
 }
+form{ padding:16px; }
+.step{ display:none; }
+.step.active{ display:block; }
 
-form{
-  padding:20px;
-}
-
+/* Inputs */
 label{
-  font-size:14px;
   display:block;
-  margin:10px 0 5px;
+  font-size:14px;
+  margin:10px 0 6px;
 }
-
 input,select{
   width:100%;
   padding:12px;
@@ -74,36 +49,65 @@ input,select{
   font-size:15px;
 }
 
-.step{display:none}
-.step.active{display:block}
-
-/* BUTTONS */
+/* Buttons */
 .btn{
   width:100%;
-  margin-top:15px;
+  margin-top:14px;
   padding:14px;
   border:none;
-  background:#ff8a00;
-  color:#111;
+  cursor:pointer;
   font-size:16px;
   font-weight:bold;
-  cursor:pointer;
 }
-
-.btn.back{
-  background:#ddd;
+.btn.primary{
+  background:var(--orange);
+  color:#111;
 }
-
 .btn.final{
-  background:#ff8a00;
+  background:var(--orange);
   font-size:18px;
 }
+.btn.back{
+  background:#e5e5e5;
+  color:#333;
+}
 
-/* TRUST */
+/* Trust */
 .trust{
   display:flex;
   justify-content:space-between;
-  padding:10px 15px 15px;
+  padding:10px 14px 14px;
   font-size:12px;
-  color:#555;
+  color:var(--muted);
+}
+
+/* Copy */
+.copy{
+  margin-top:18px;
+}
+.copy h1{
+  font-size:26px;
+  margin:8px 0;
+}
+.copy .sub{
+  color:var(--muted);
+  margin-bottom:10px;
+}
+.copy ul{
+  padding-left:18px;
+}
+.copy li{ margin-bottom:6px; }
+
+/* Desktop */
+@media (min-width: 900px){
+  .lp{
+    display:grid;
+    grid-template-columns: 420px 1fr;
+    gap:40px;
+    padding-top:40px;
+  }
+  .copy{
+    margin-top:0;
+  }
+  .copy h1{ font-size:36px; }
 }
