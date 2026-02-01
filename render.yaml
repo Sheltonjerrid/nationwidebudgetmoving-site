@@ -1,6 +1,5 @@
 services:
-  - type: static_site
+  - type: static
     name: nationwidebudgetmoving
     env: static
     staticPublishPath: .
-
