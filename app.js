@@ -14,143 +14,132 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let ZIP_INDEX = null;
 
-  /* ===============================
-     LOAD ZIP DATA (zip-index.json)
-  =============================== */
-  fetch("/zip-index.json")
+  /* ======================
+     LOAD ZIP INDEX
+  ====================== */
+  fetch("zip-index.json")
     .then(res => res.json())
-    .then(data => {
-      ZIP_INDEX = data;
-      console.log("ZIP index loaded");
-    })
-    .catch(err => {
-      console.error("ZIP data failed to load", err);
-    });
+    .then(data => ZIP_INDEX = data)
+    .catch(err => console.error("ZIP index failed", err));
 
-  /* ===============================
-     SCREEN NAVIGATION
-  =============================== */
-  function showScreen(index) {
-    screens.forEach((s, i) => {
-      s.style.display = i === index ? "block" : "none";
-    });
-    current = index;
+  function showScreen(i) {
+    screens.forEach((s, idx) => s.classList.toggle("active", idx === i));
   }
-
-  showScreen(0);
 
   function next() {
     if (current < screens.length - 1) {
-      showScreen(current + 1);
+      current++;
+      showScreen(current);
     }
   }
 
-  /* ===============================
-     BUTTON HANDLERS
-  =============================== */
-  document.querySelectorAll("[data-move-type]").forEach(btn => {
-    btn.onclick = () => {
-      state.moveType = btn.dataset.moveType;
-      next();
-    };
-  });
-
-  document.querySelectorAll("[data-home-size]").forEach(btn => {
-    btn.onclick = () => {
-      state.homeSize = btn.dataset.homeSize;
-      next();
-    };
-  });
-
-  const dateInput = document.getElementById("moveDate");
-  if (dateInput) {
-    dateInput.onchange = () => {
-      state.moveDate = dateInput.value;
-      next();
-    };
+  function setupButtons(selector, key) {
+    document.querySelectorAll(selector).forEach(btn => {
+      btn.onclick = () => {
+        state[key] = btn.dataset.value;
+        next();
+      };
+    });
   }
 
-  /* ===============================
+  /* ======================
+     BUTTON SETUPS
+  ====================== */
+  setupButtons("[data-move-type]", "moveType");
+  setupButtons("[data-home-size]", "homeSize");
+
+  document.getElementById("moveDate").onchange = e => {
+    state.moveDate = e.target.value;
+    next();
+  };
+
+  /* ======================
      ZIP AUTOCOMPLETE
-  =============================== */
-  function setupZipAutocomplete(inputEl, resultsEl, onSelect) {
-    inputEl.addEventListener("input", () => {
-      const value = inputEl.value.trim();
+  ====================== */
+  function zipAutocomplete(input, results, setter) {
+    input.addEventListener("input", () => {
+      const val = input.value.trim();
+      results.innerHTML = "";
+      results.style.display = "none";
 
-      resultsEl.innerHTML = "";
-      resultsEl.style.display = "none";
+      if (!ZIP_INDEX || val.length < 2) return;
 
-      if (!ZIP_INDEX || value.length < 2) return;
-
-      const key = value.slice(0, 2);
+      const key = val.slice(0, 2);
       const matches = ZIP_INDEX[key] || [];
-
       if (!matches.length) return;
 
-      resultsEl.style.display = "block";
+      results.style.display = "block";
 
       matches.slice(0, 10).forEach(item => {
         const div = document.createElement("div");
         div.className = "zip-option";
         div.textContent = `${item.city}, ${item.state}`;
-
         div.onclick = () => {
-          inputEl.value = `${item.city}, ${item.state}`;
-          resultsEl.innerHTML = "";
-          resultsEl.style.display = "none";
-          onSelect(`${item.city}, ${item.state}`);
+          input.value = `${item.city}, ${item.state}`;
+          results.style.display = "none";
+          setter(input.value);
+          next();
         };
-
-        resultsEl.appendChild(div);
+        results.appendChild(div);
       });
     });
   }
 
-  const fromInput = document.getElementById("fromZip");
-  const fromResults = document.getElementById("fromZipResults");
-  const toInput = document.getElementById("toZip");
-  const toResults = document.getElementById("toZipResults");
+  zipAutocomplete(
+    document.getElementById("fromZip"),
+    document.getElementById("fromZipResults"),
+    v => state.from = v
+  );
 
-  if (fromInput && fromResults) {
-    setupZipAutocomplete(fromInput, fromResults, value => {
-      state.from = value;
-      next();
-    });
-  }
+  zipAutocomplete(
+    document.getElementById("toZip"),
+    document.getElementById("toZipResults"),
+    v => state.to = v
+  );
 
-  if (toInput && toResults) {
-    setupZipAutocomplete(toInput, toResults, value => {
-      state.to = value;
-      next();
-    });
-  }
+  /* ======================
+     LOADING SCREEN
+  ====================== */
+  const loadingMsgs = [
+    "Thank you…",
+    "One moment please…",
+    "Connecting you to movers…",
+    "Movers located…",
+    "Finalizing availability…"
+  ];
 
-  /* ===============================
-     NAME + PHONE
-  =============================== */
-  const nameInput = document.getElementById("fullName");
-  const phoneInput = document.getElementById("phoneNumber");
+  let progress = 0;
+  const bar = document.getElementById("progressBar");
+  const msg = document.getElementById("loadingText");
 
-  if (nameInput) {
-    nameInput.addEventListener("input", () => {
-      if (nameInput.value.trim().length > 2) {
-        state.name = nameInput.value.trim();
+  function startLoading() {
+    current++;
+    showScreen(current);
+
+    const interval = setInterval(() => {
+      progress += 2;
+      bar.style.width = progress + "%";
+      msg.textContent = loadingMsgs[Math.floor(progress / 20)] || "Almost done…";
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        next();
       }
-    });
+    }, 80);
   }
 
-  if (phoneInput) {
-    phoneInput.addEventListener("input", () => {
-      if (phoneInput.value.trim().length >= 10) {
-        state.phone = phoneInput.value.trim();
-      }
-    });
-  }
+  document.getElementById("startLoading").onclick = startLoading;
 
-  const submitBtn = document.getElementById("submitQuote");
-  if (submitBtn) {
-    submitBtn.onclick = () => {
-      next(); // loading screen next
-    };
-  }
+  /* ======================
+     LEAD SUBMIT
+  ====================== */
+  document.getElementById("leadForm").onsubmit = e => {
+    e.preventDefault();
+    state.name = document.getElementById("name").value;
+    state.phone = document.getElementById("phone").value;
+    next();
+    console.log("LEAD DATA:", state);
+  };
+
+  showScreen(current);
 });
