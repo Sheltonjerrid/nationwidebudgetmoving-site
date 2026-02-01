@@ -41,18 +41,26 @@
   </section>
 
   <!-- SCREEN 4: FROM -->
-  <section class="screen">
-    <h1>Moving From</h1>
-    <input id="fromZip" type="text" placeholder="Enter ZIP code" oninput="zipSearch(this.value,'from')" />
-    <div id="fromResults" class="results"></div>
-  </section>
+<section class="screen">
+  <h1>Moving From</h1>
+  <input id="fromZip" type="text" placeholder="Enter ZIP code"
+         oninput="zipSearch(this.value,'from')" />
+  <div id="fromResults" class="results"></div>
+  <button id="fromNext" class="primary disabled" onclick="confirmZip('from')" disabled>
+    Next
+  </button>
+</section>
 
-  <!-- SCREEN 5: TO -->
-  <section class="screen">
-    <h1>Moving To</h1>
-    <input id="toZip" type="text" placeholder="Enter ZIP code" oninput="zipSearch(this.value,'to')" />
-    <div id="toResults" class="results"></div>
-  </section>
+<!-- SCREEN 5: TO -->
+<section class="screen">
+  <h1>Moving To</h1>
+  <input id="toZip" type="text" placeholder="Enter ZIP code"
+         oninput="zipSearch(this.value,'to')" />
+  <div id="toResults" class="results"></div>
+  <button id="toNext" class="primary disabled" onclick="confirmZip('to')" disabled>
+    Submit
+  </button>
+</section>
 
   <!-- SCREEN 6: LOADING -->
   <section class="screen loading">
