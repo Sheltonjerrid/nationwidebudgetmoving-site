@@ -1,6 +1,14 @@
 let current = 0;
 const screens = document.querySelectorAll('.screen');
 
+const state = {
+  moveType: "",
+  homeSize: "",
+  moveDate: "",
+  from: "",
+  to: ""
+};
+
 function show(i){
   screens.forEach(s => s.classList.remove('active'));
   screens[i].classList.add('active');
@@ -9,25 +17,22 @@ function show(i){
 function next(){
   current++;
 
-  // fake loading screen
+  // LOADING SCREEN
   if(screens[current].classList.contains('loading')){
-    show(current);
-    setTimeout(()=>{ current++; show(current); }, 2500);
+    runLoadingSequence();
   } else {
     show(current);
   }
 }
 
-function setMoveType(val){
-  next();
-}
+function setMoveType(v){ state.moveType = v; next(); }
+function setHomeSize(v){ state.homeSize = v; next(); }
+function setMoveDate(v){ state.moveDate = v; next(); }
 
-function setHomeSize(val){
-  next();
-}
-
-function setMoveDate(val){
-  next();
-}
-
-show(current);
+/* =========================
+   ZIP AUTOCOMPLETE
+========================= */
+function zipSearch(val, type){
+  const box = document.getElementById(type + 'Results');
+  box.innerHTML = "";
+  if(val.length < 2
