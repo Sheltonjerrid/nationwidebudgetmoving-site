@@ -94,3 +94,16 @@ input{
   margin-top:10px;
   color:#555;
 }
+
+.results{
+  border:1px solid #ccc;
+  margin-top:6px;
+}
+.result{
+  padding:10px;
+  background:#fff;
+  cursor:pointer;
+}
+.result:hover{
+  background:#f0f0f0;
+}
