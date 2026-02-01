@@ -107,3 +107,7 @@ input{
 .result:hover{
   background:#f0f0f0;
 }
+.primary.disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
