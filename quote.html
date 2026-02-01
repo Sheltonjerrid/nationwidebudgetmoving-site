@@ -15,76 +15,71 @@
 
 <main id="app">
 
-  <!-- SCREEN 1 -->
+  <!-- SCREEN 0 -->
   <section class="screen active">
     <h1>Moving Cost Calculator</h1>
     <p>Select Your Move Type</p>
-    <button class="choice" onclick="setMoveType('Local')">Local Move</button>
-    <button class="choice" onclick="setMoveType('Long Distance')">Long Distance</button>
+    <button class="choice" data-move="Local">Local Move</button>
+    <button class="choice" data-move="Long Distance">Long Distance</button>
+  </section>
+
+  <!-- SCREEN 1 -->
+  <section class="screen">
+    <h1>Select Home Size</h1>
+    <button class="choice" data-size="Studio">Studio</button>
+    <button class="choice" data-size="1 Bedroom">1 Bedroom</button>
+    <button class="choice" data-size="2 Bedroom">2 Bedroom</button>
+    <button class="choice" data-size="3 Bedroom">3 Bedroom</button>
+    <button class="choice" data-size="4+ Bedroom">4+ Bedroom</button>
+    <button class="choice" data-size="Not Sure">Not Sure</button>
   </section>
 
   <!-- SCREEN 2 -->
   <section class="screen">
-    <h1>Select Home Size</h1>
-    <button class="choice" onclick="setHomeSize('Studio')">Studio</button>
-    <button class="choice" onclick="setHomeSize('1 Bedroom')">1 Bedroom</button>
-    <button class="choice" onclick="setHomeSize('2 Bedroom')">2 Bedroom</button>
-    <button class="choice" onclick="setHomeSize('3 Bedroom')">3 Bedroom</button>
-    <button class="choice" onclick="setHomeSize('4+ Bedroom')">4+ Bedroom</button>
-    <button class="choice" onclick="setHomeSize('Not Sure')">Not Sure</button>
+    <h1>Select Move Date</h1>
+    <input id="moveDate" type="date"/>
+    <button class="primary" id="dateNext">Next</button>
   </section>
 
   <!-- SCREEN 3 -->
   <section class="screen">
-    <h1>Select Move Date</h1>
-    <input type="date" onchange="setMoveDate(this.value)" />
+    <h1>Moving From</h1>
+    <input id="fromZip" type="text" placeholder="Enter ZIP code"/>
+    <div id="fromResults" class="results"></div>
+    <button class="primary disabled" id="fromNext" disabled>Next</button>
   </section>
 
-  <!-- SCREEN 4: FROM -->
-<section class="screen">
-  <h1>Moving From</h1>
-  <input id="fromZip" type="text" placeholder="Enter ZIP code"
-         oninput="zipSearch(this.value,'from')" />
-  <div id="fromResults" class="results"></div>
-  <button id="fromNext" class="primary disabled" onclick="confirmZip('from')" disabled>
-    Next
-  </button>
-</section>
+  <!-- SCREEN 4 -->
+  <section class="screen">
+    <h1>Moving To</h1>
+    <input id="toZip" type="text" placeholder="Enter ZIP code"/>
+    <div id="toResults" class="results"></div>
+    <button class="primary disabled" id="toNext" disabled>Submit</button>
+  </section>
 
-<!-- SCREEN 5: TO -->
-<section class="screen">
-  <h1>Moving To</h1>
-  <input id="toZip" type="text" placeholder="Enter ZIP code"
-         oninput="zipSearch(this.value,'to')" />
-  <div id="toResults" class="results"></div>
-  <button id="toNext" class="primary disabled" onclick="confirmZip('to')" disabled>
-    Submit
-  </button>
-</section>
-
-  <!-- SCREEN 6: LOADING -->
+  <!-- SCREEN 5 -->
   <section class="screen loading">
     <div class="spinner"></div>
     <p id="loadingText"></p>
   </section>
 
-  <!-- SCREEN 7 -->
+  <!-- SCREEN 6 -->
   <section class="screen">
     <h1>Your Quote Is Ready</h1>
-    <input type="text" placeholder="First Name" />
-    <input type="text" placeholder="Last Name" />
-    <button class="primary" onclick="next()">Continue</button>
+    <input type="text" placeholder="First Name"/>
+    <input type="text" placeholder="Last Name"/>
+    <button class="primary" id="nameNext">Continue</button>
   </section>
 
-  <!-- SCREEN 8 -->
+  <!-- SCREEN 7 -->
   <section class="screen">
     <h1>Enter Your Phone Number</h1>
-    <input type="tel" placeholder="Phone Number" />
-    <button class="primary" onclick="next()">View My Quote</button>
+    <input type="tel" placeholder="Phone Number"/>
+    <button class="primary" id="phoneNext">View My Quote</button>
     <p class="tcpa">By clicking, you consent to receive calls/texts from moving partners.</p>
   </section>
 
-  <!-- SCREEN 9 -->
+  <!-- SCREEN 8 -->
   <section class="screen">
     <h1>You’re All Set!</h1>
     <p>A mover will contact you shortly.</p>
