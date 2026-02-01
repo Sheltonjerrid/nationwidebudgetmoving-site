@@ -60,9 +60,17 @@ function zipSearch(val, type){
 
 function selectCity(type, z){
   const label = `${z.city}, ${z.state}`;
-  if(type === 'from') state.from = label;
-  if(type === 'to') state.to = label;
-  next();
+
+  if(type === 'from'){
+    state.from = label;
+    document.getElementById('fromNext').disabled = false;
+    document.getElementById('fromNext').classList.remove('disabled');
+  }
+
+  if(type === 'to'){
+    state.to = label;
+    document.getElementById('toNext').disabled = false;
+    document.getElementById('toNext').classList.remove('disabled');
 }
 
 // ---------- LOADING SCREEN ----------
