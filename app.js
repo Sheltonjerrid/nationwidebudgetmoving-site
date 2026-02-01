@@ -1,111 +1,125 @@
-let current = 0;
-const screens = document.querySelectorAll('.screen');
+document.addEventListener("DOMContentLoaded", () => {
 
-const state = {
-  moveType: "",
-  homeSize: "",
-  moveDate: "",
-  from: "",
-  to: ""
-};
+  let current = 0;
+  const screens = document.querySelectorAll(".screen");
 
-function show(i){
-  screens.forEach(s => s.classList.remove('active'));
-  screens[i].classList.add('active');
-}
+  const state = {
+    moveType: "",
+    homeSize: "",
+    moveDate: "",
+    from: "",
+    to: ""
+  };
 
-function next(){
-  current++;
-
-  // If loading screen, run sequence
-  if (screens[current].classList.contains('loading')) {
-    runLoadingSequence();
-  } else {
-    show(current);
-  }
-}
-
-// ---------- STEP SETTERS ----------
-function setMoveType(v){
-  state.moveType = v;
-  next();
-}
-
-function setHomeSize(v){
-  state.homeSize = v;
-  next();
-}
-
-function setMoveDate(v){
-  state.moveDate = v;
-  next();
-}
-
-// ---------- ZIP AUTOCOMPLETE ----------
-function zipSearch(val, type){
-  const box = document.getElementById(type + 'Results');
-  box.innerHTML = "";
-  if(val.length < 2) return;
-
-  ZIP_DATA.filter(z => z.zip.startsWith(val))
-    .slice(0,5)
-    .forEach(z => {
-      const div = document.createElement('div');
-      div.className = "result";
-      div.innerText = `${z.city}, ${z.state}`;
-      div.onclick = () => selectCity(type, z);
-      box.appendChild(div);
-    });
-}
-
-function selectCity(type, z){
-  const label = `${z.city}, ${z.state}`;
-
-  if(type === 'from'){
-    state.from = label;
-    document.getElementById('fromNext').disabled = false;
-    document.getElementById('fromNext').classList.remove('disabled');
+  function show(i){
+    screens.forEach(s => s.classList.remove("active"));
+    screens[i].classList.add("active");
   }
 
-  if(type === 'to'){
-    state.to = label;
-    document.getElementById('toNext').disabled = false;
-    document.getElementById('toNext').classList.remove('disabled');
-}
-
-// ---------- LOADING SCREEN ----------
-function runLoadingSequence(){
-  const loadingScreen = screens[current];
-  const textEl = document.getElementById('loadingText');
-
-  let percent = 0;
-
-  const messages = [
-    "Thank you! One moment please…",
-    "Connecting you to movers in your area…",
-    "Locating licensed movers near you…",
-    `Finding available movers servicing ${state.from} → ${state.to}`,
-    "Finalizing availability…"
-  ];
-
-  show(current);
-
-  const interval = setInterval(() => {
-    percent++;
-
-    if (percent < 25) textEl.innerText = messages[0];
-    else if (percent < 45) textEl.innerText = messages[1];
-    else if (percent < 65) textEl.innerText = messages[2];
-    else if (percent < 85) textEl.innerText = messages[3];
-    else textEl.innerText = messages[4];
-
-    if (percent >= 100) {
-      clearInterval(interval);
-      current++;
+  function next(){
+    current++;
+    if (screens[current].classList.contains("loading")) {
+      runLoading();
+    } else {
       show(current);
     }
-  }, 30);
-}
+  }
 
-// ---------- INIT ----------
-show(current);
+  /* -------- MOVE TYPE -------- */
+  document.querySelectorAll("[data-move]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.moveType = btn.dataset.move;
+      next();
+    });
+  });
+
+  /* -------- HOME SIZE -------- */
+  document.querySelectorAll("[data-size]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.homeSize = btn.dataset.size;
+      next();
+    });
+  });
+
+  /* -------- DATE -------- */
+  document.getElementById("dateNext").onclick = () => {
+    state.moveDate = document.getElementById("moveDate").value;
+    if(state.moveDate) next();
+  };
+
+  /* -------- ZIP AUTOCOMPLETE -------- */
+  function zipSearch(val, type){
+    const box = document.getElementById(type+"Results");
+    box.innerHTML = "";
+    if(val.length < 2) return;
+
+    ZIP_DATA.filter(z => z.zip.startsWith(val))
+      .slice(0,5)
+      .forEach(z => {
+        const d = document.createElement("div");
+        d.className = "result";
+        d.innerText = `${z.city}, ${z.state}`;
+        d.onclick = () => selectZip(type, z);
+        box.appendChild(d);
+      });
+  }
+
+  function selectZip(type, z){
+    const label = `${z.city}, ${z.state}`;
+    if(type === "from"){
+      state.from = label;
+      enable("fromNext");
+    }
+    if(type === "to"){
+      state.to = label;
+      enable("toNext");
+    }
+  }
+
+  function enable(id){
+    const b = document.getElementById(id);
+    b.disabled = false;
+    b.classList.remove("disabled");
+  }
+
+  document.getElementById("fromZip").oninput = e => zipSearch(e.target.value,"from");
+  document.getElementById("toZip").oninput = e => zipSearch(e.target.value,"to");
+
+  document.getElementById("fromNext").onclick = next;
+  document.getElementById("toNext").onclick = next;
+
+  /* -------- LOADING -------- */
+  function runLoading(){
+    const text = document.getElementById("loadingText");
+    let p = 0;
+
+    const msgs = [
+      "Thank you! One moment please…",
+      "Connecting you to movers in your area…",
+      "Locating licensed movers near you…",
+      `Finding available movers servicing ${state.from} → ${state.to}`,
+      "Finalizing availability…"
+    ];
+
+    show(current);
+
+    const i = setInterval(() => {
+      p++;
+      text.innerText =
+        p < 25 ? msgs[0] :
+        p < 45 ? msgs[1] :
+        p < 65 ? msgs[2] :
+        p < 85 ? msgs[3] : msgs[4];
+
+      if(p >= 100){
+        clearInterval(i);
+        next();
+      }
+    }, 30);
+  }
+
+  document.getElementById("nameNext").onclick = next;
+  document.getElementById("phoneNext").onclick = next;
+
+  show(current);
+});
