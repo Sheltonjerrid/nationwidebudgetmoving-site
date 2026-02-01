@@ -1,109 +1,83 @@
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background:#ffffff;
-  color:#111;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Free Moving Quote | Nationwide Budget Moving</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="tm">
 
-.page{
-  padding:40px 0;
-}
+  <div class="tm-header">
+    <h1>Nationwide Long-Distance Moving Quotes</h1>
+    <p>Compare licensed & insured movers. Get your free quote.</p>
+  </div>
 
-.container{
-  max-width:1100px;
-  margin:0 auto;
-  display:flex;
-  gap:40px;
-  align-items:flex-start;
-}
+  <div class="tm-wrap">
+    <form id="quoteForm" class="tm-form">
+      <div class="tm-progress">
+        <div id="bar"></div>
+        <span id="stepText">Step 1 of 3</span>
+      </div>
 
-.copy{
-  flex:1;
-}
+      <div class="tm-step active">
+        <label>Moving From ZIP Code</label>
+        <input type="text" required>
+        <label>Moving To ZIP Code</label>
+        <input type="text" required>
+        <button type="button" class="tm-btn" onclick="next()">Get Free Quote</button>
+      </div>
 
-.copy h1{
-  font-size:38px;
-  margin-bottom:10px;
-}
+      <div class="tm-step">
+        <label>Home Size</label>
+        <select required>
+          <option value="">Select</option>
+          <option>Studio</option>
+          <option>1 Bedroom</option>
+          <option>2 Bedroom</option>
+          <option>3+ Bedroom</option>
+        </select>
+        <label>Move Date</label>
+        <input type="date" required>
+        <button type="button" class="tm-btn" onclick="next()">Continue</button>
+        <button type="button" class="tm-back" onclick="prev()">Back</button>
+      </div>
 
-.copy .sub{
-  font-size:18px;
-  margin-bottom:20px;
-}
+      <div class="tm-step">
+        <label>Full Name</label>
+        <input type="text" required>
+        <label>Email</label>
+        <input type="email" required>
+        <label>Phone</label>
+        <input type="tel" required>
+        <button type="submit" class="tm-btn final">Get My Free Quote</button>
+        <button type="button" class="tm-back" onclick="prev()">Back</button>
+      </div>
+    </form>
 
-.bullets{
-  list-style:none;
-  padding:0;
-}
-.bullets li{
-  margin-bottom:10px;
-  font-size:16px;
-}
+    <div class="tm-trust">
+      <span>✔ Nationwide Coverage</span>
+      <span>✔ Licensed & Insured Movers</span>
+      <span>✔ No Obligation</span>
+    </div>
+  </div>
 
-/* FORM BOX */
-.form-box{
-  width:420px;
-  border:1px solid #ddd;
-  background:#fafafa;
-}
+<script>
+let step=0;
+const steps=document.querySelectorAll('.tm-step');
+const bar=document.getElementById('bar');
+const text=document.getElementById('stepText');
 
-.form-header{
-  background:#5b2aa5;
-  color:#fff;
-  padding:15px;
-  font-size:18px;
-  font-weight:bold;
-  text-align:center;
+function render(){
+  steps.forEach(s=>s.classList.remove('active'));
+  steps[step].classList.add('active');
+  bar.style.width=((step+1)/steps.length*100)+'%';
+  text.innerText=`Step ${step+1} of ${steps.length}`;
 }
+function next(){ if(step<steps.length-1){step++;render();}}
+function prev(){ if(step>0){step--;render();}}
+render();
+</script>
 
-form{
-  padding:20px;
-}
-
-label{
-  font-size:14px;
-  display:block;
-  margin:10px 0 5px;
-}
-
-input,select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccc;
-  font-size:15px;
-}
-
-.step{display:none}
-.step.active{display:block}
-
-/* BUTTONS */
-.btn{
-  width:100%;
-  margin-top:15px;
-  padding:14px;
-  border:none;
-  background:#ff8a00;
-  color:#111;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.btn.back{
-  background:#ddd;
-}
-
-.btn.final{
-  background:#ff8a00;
-  font-size:18px;
-}
-
-/* TRUST */
-.trust{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 15px 15px;
-  font-size:12px;
-  color:#555;
-}
+</body>
+</html>
