@@ -15,7 +15,7 @@
 
 <main id="app">
 
-  <!-- SCREEN 1: MOVE TYPE -->
+  <!-- SCREEN 1 -->
   <section class="screen active">
     <h1>Moving Cost Calculator</h1>
     <p>Select Your Move Type</p>
@@ -23,7 +23,7 @@
     <button class="choice" onclick="setMoveType('Long Distance')">Long Distance</button>
   </section>
 
-  <!-- SCREEN 2: HOME SIZE -->
+  <!-- SCREEN 2 -->
   <section class="screen">
     <h1>Select Home Size</h1>
     <button class="choice" onclick="setHomeSize('Studio')">Studio</button>
@@ -34,33 +34,33 @@
     <button class="choice" onclick="setHomeSize('Not Sure')">Not Sure</button>
   </section>
 
-  <!-- SCREEN 3: MOVE DATE -->
+  <!-- SCREEN 3 -->
   <section class="screen">
     <h1>Select Move Date</h1>
     <input type="date" onchange="setMoveDate(this.value)" />
   </section>
 
-  <!-- SCREEN 4: FROM ZIP -->
+  <!-- SCREEN 4: FROM -->
   <section class="screen">
     <h1>Moving From</h1>
-    <input type="text" placeholder="Enter ZIP code" />
-    <button class="primary" onclick="next()">Next</button>
+    <input id="fromZip" type="text" placeholder="Enter ZIP code" oninput="zipSearch(this.value,'from')" />
+    <div id="fromResults" class="results"></div>
   </section>
 
-  <!-- SCREEN 5: TO ZIP -->
+  <!-- SCREEN 5: TO -->
   <section class="screen">
     <h1>Moving To</h1>
-    <input type="text" placeholder="Enter ZIP code" />
-    <button class="primary" onclick="next()">Submit</button>
+    <input id="toZip" type="text" placeholder="Enter ZIP code" oninput="zipSearch(this.value,'to')" />
+    <div id="toResults" class="results"></div>
   </section>
 
   <!-- SCREEN 6: LOADING -->
   <section class="screen loading">
     <div class="spinner"></div>
-    <p id="loadingText">Finding available movers servicing your locations…</p>
+    <p id="loadingText"></p>
   </section>
 
-  <!-- SCREEN 7: NAME -->
+  <!-- SCREEN 7 -->
   <section class="screen">
     <h1>Your Quote Is Ready</h1>
     <input type="text" placeholder="First Name" />
@@ -68,7 +68,7 @@
     <button class="primary" onclick="next()">Continue</button>
   </section>
 
-  <!-- SCREEN 8: PHONE -->
+  <!-- SCREEN 8 -->
   <section class="screen">
     <h1>Enter Your Phone Number</h1>
     <input type="tel" placeholder="Phone Number" />
@@ -76,7 +76,7 @@
     <p class="tcpa">By clicking, you consent to receive calls/texts from moving partners.</p>
   </section>
 
-  <!-- SCREEN 9: CONFIRM -->
+  <!-- SCREEN 9 -->
   <section class="screen">
     <h1>You’re All Set!</h1>
     <p>A mover will contact you shortly.</p>
@@ -84,6 +84,7 @@
 
 </main>
 
+<script src="zipdata.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
