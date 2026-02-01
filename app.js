@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   let current = 0;
   const screens = document.querySelectorAll(".screen");
 
@@ -8,164 +7,150 @@ document.addEventListener("DOMContentLoaded", () => {
     homeSize: "",
     moveDate: "",
     from: "",
-    to: ""
+    to: "",
+    name: "",
+    phone: ""
   };
 
   let ZIP_INDEX = null;
 
-  /* =========================
-     LOAD ZIP DATA (OPTION B)
-  ========================= */
-  fetch("zip-index.json")
+  /* ===============================
+     LOAD ZIP DATA (zip-index.json)
+  =============================== */
+  fetch("/zip-index.json")
     .then(res => res.json())
     .then(data => {
       ZIP_INDEX = data;
+      console.log("ZIP index loaded");
     })
     .catch(err => {
       console.error("ZIP data failed to load", err);
     });
 
-  /* =========================
-     SCREEN CONTROL
-  ========================= */
-  function show(i){
-    screens.forEach(s => s.classList.remove("active"));
-    screens[i].classList.add("active");
+  /* ===============================
+     SCREEN NAVIGATION
+  =============================== */
+  function showScreen(index) {
+    screens.forEach((s, i) => {
+      s.style.display = i === index ? "block" : "none";
+    });
+    current = index;
   }
 
-  function next(){
-    current++;
-    if (screens[current].classList.contains("loading")) {
-      runLoading();
-    } else {
-      show(current);
+  showScreen(0);
+
+  function next() {
+    if (current < screens.length - 1) {
+      showScreen(current + 1);
     }
   }
 
-  /* =========================
-     MOVE TYPE
-  ========================= */
-  document.querySelectorAll("[data-move]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      state.moveType = btn.dataset.move;
+  /* ===============================
+     BUTTON HANDLERS
+  =============================== */
+  document.querySelectorAll("[data-move-type]").forEach(btn => {
+    btn.onclick = () => {
+      state.moveType = btn.dataset.moveType;
       next();
-    });
+    };
   });
 
-  /* =========================
-     HOME SIZE
-  ========================= */
-  document.querySelectorAll("[data-size]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      state.homeSize = btn.dataset.size;
+  document.querySelectorAll("[data-home-size]").forEach(btn => {
+    btn.onclick = () => {
+      state.homeSize = btn.dataset.homeSize;
       next();
-    });
+    };
   });
 
-  /* =========================
-     MOVE DATE
-  ========================= */
-  document.getElementById("dateNext").addEventListener("click", () => {
-    const d = document.getElementById("moveDate").value;
-    if (!d) return;
-    state.moveDate = d;
-    next();
-  });
+  const dateInput = document.getElementById("moveDate");
+  if (dateInput) {
+    dateInput.onchange = () => {
+      state.moveDate = dateInput.value;
+      next();
+    };
+  }
 
-  /* =========================
+  /* ===============================
      ZIP AUTOCOMPLETE
-  ========================= */
-  function zipSearch(val, type){
-    const box = document.getElementById(type + "Results");
-    box.innerHTML = "";
+  =============================== */
+  function setupZipAutocomplete(inputEl, resultsEl, onSelect) {
+    inputEl.addEventListener("input", () => {
+      const value = inputEl.value.trim();
 
-    if (!ZIP_INDEX || val.length < 2) return;
+      resultsEl.innerHTML = "";
+      resultsEl.style.display = "none";
 
-    const key = val.slice(0,2);
-    const list = ZIP_INDEX[key] || [];
+      if (!ZIP_INDEX || value.length < 2) return;
 
-    list.slice(0,6).forEach(item => {
-      const div = document.createElement("div");
-      div.className = "result";
-      div.textContent = `${item.city}, ${item.state}`;
-      div.onclick = () => selectZip(type, item);
-      box.appendChild(div);
+      const key = value.slice(0, 2);
+      const matches = ZIP_INDEX[key] || [];
+
+      if (!matches.length) return;
+
+      resultsEl.style.display = "block";
+
+      matches.slice(0, 10).forEach(item => {
+        const div = document.createElement("div");
+        div.className = "zip-option";
+        div.textContent = `${item.city}, ${item.state}`;
+
+        div.onclick = () => {
+          inputEl.value = `${item.city}, ${item.state}`;
+          resultsEl.innerHTML = "";
+          resultsEl.style.display = "none";
+          onSelect(`${item.city}, ${item.state}`);
+        };
+
+        resultsEl.appendChild(div);
+      });
     });
   }
 
-  function selectZip(type, item){
-    const label = `${item.city}, ${item.state}`;
+  const fromInput = document.getElementById("fromZip");
+  const fromResults = document.getElementById("fromZipResults");
+  const toInput = document.getElementById("toZip");
+  const toResults = document.getElementById("toZipResults");
 
-    if(type === "from"){
-      state.from = label;
-      enable("fromNext");
-    }
-
-    if(type === "to"){
-      state.to = label;
-      enable("toNext");
-    }
+  if (fromInput && fromResults) {
+    setupZipAutocomplete(fromInput, fromResults, value => {
+      state.from = value;
+      next();
+    });
   }
 
-  function enable(id){
-    const btn = document.getElementById(id);
-    btn.disabled = false;
-    btn.classList.remove("disabled");
+  if (toInput && toResults) {
+    setupZipAutocomplete(toInput, toResults, value => {
+      state.to = value;
+      next();
+    });
   }
 
-  document.getElementById("fromZip").addEventListener("input", e => {
-    zipSearch(e.target.value, "from");
-  });
-
-  document.getElementById("toZip").addEventListener("input", e => {
-    zipSearch(e.target.value, "to");
-  });
-
-  document.getElementById("fromNext").addEventListener("click", next);
-  document.getElementById("toNext").addEventListener("click", next);
-
-  /* =========================
-     LOADING SCREEN
-  ========================= */
-  function runLoading(){
-    const text = document.getElementById("loadingText");
-    let percent = 0;
-
-    const messages = [
-      "Thank you! One moment please…",
-      "Connecting you to movers in your area…",
-      "Locating licensed movers near you…",
-      `Finding available movers servicing ${state.from} → ${state.to}`,
-      "Finalizing availability…"
-    ];
-
-    show(current);
-
-    const interval = setInterval(() => {
-      percent++;
-
-      if (percent < 25) text.innerText = messages[0];
-      else if (percent < 45) text.innerText = messages[1];
-      else if (percent < 65) text.innerText = messages[2];
-      else if (percent < 85) text.innerText = messages[3];
-      else text.innerText = messages[4];
-
-      if (percent >= 100) {
-        clearInterval(interval);
-        next();
-      }
-    }, 30);
-  }
-
-  /* =========================
+  /* ===============================
      NAME + PHONE
-  ========================= */
-  document.getElementById("nameNext").addEventListener("click", next);
-  document.getElementById("phoneNext").addEventListener("click", next);
+  =============================== */
+  const nameInput = document.getElementById("fullName");
+  const phoneInput = document.getElementById("phoneNumber");
 
-  /* =========================
-     INIT
-  ========================= */
-  show(current);
+  if (nameInput) {
+    nameInput.addEventListener("input", () => {
+      if (nameInput.value.trim().length > 2) {
+        state.name = nameInput.value.trim();
+      }
+    });
+  }
 
+  if (phoneInput) {
+    phoneInput.addEventListener("input", () => {
+      if (phoneInput.value.trim().length >= 10) {
+        state.phone = phoneInput.value.trim();
+      }
+    });
+  }
+
+  const submitBtn = document.getElementById("submitQuote");
+  if (submitBtn) {
+    submitBtn.onclick = () => {
+      next(); // loading screen next
+    };
+  }
 });
