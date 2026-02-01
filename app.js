@@ -11,6 +11,23 @@ document.addEventListener("DOMContentLoaded", () => {
     to: ""
   };
 
+  let ZIP_INDEX = null;
+
+  /* =========================
+     LOAD ZIP DATA (OPTION B)
+  ========================= */
+  fetch("zip-index.json")
+    .then(res => res.json())
+    .then(data => {
+      ZIP_INDEX = data;
+    })
+    .catch(err => {
+      console.error("ZIP data failed to load", err);
+    });
+
+  /* =========================
+     SCREEN CONTROL
+  ========================= */
   function show(i){
     screens.forEach(s => s.classList.remove("active"));
     screens[i].classList.add("active");
@@ -25,7 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /* -------- MOVE TYPE -------- */
+  /* =========================
+     MOVE TYPE
+  ========================= */
   document.querySelectorAll("[data-move]").forEach(btn => {
     btn.addEventListener("click", () => {
       state.moveType = btn.dataset.move;
@@ -33,7 +52,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* -------- HOME SIZE -------- */
+  /* =========================
+     HOME SIZE
+  ========================= */
   document.querySelectorAll("[data-size]").forEach(btn => {
     btn.addEventListener("click", () => {
       state.homeSize = btn.dataset.size;
@@ -41,35 +62,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* -------- DATE -------- */
-  document.getElementById("dateNext").onclick = () => {
-    state.moveDate = document.getElementById("moveDate").value;
-    if(state.moveDate) next();
-  };
+  /* =========================
+     MOVE DATE
+  ========================= */
+  document.getElementById("dateNext").addEventListener("click", () => {
+    const d = document.getElementById("moveDate").value;
+    if (!d) return;
+    state.moveDate = d;
+    next();
+  });
 
-  /* -------- ZIP AUTOCOMPLETE -------- */
+  /* =========================
+     ZIP AUTOCOMPLETE
+  ========================= */
   function zipSearch(val, type){
-    const box = document.getElementById(type+"Results");
+    const box = document.getElementById(type + "Results");
     box.innerHTML = "";
-    if(val.length < 2) return;
 
-    ZIP_DATA.filter(z => z.zip.startsWith(val))
-      .slice(0,5)
-      .forEach(z => {
-        const d = document.createElement("div");
-        d.className = "result";
-        d.innerText = `${z.city}, ${z.state}`;
-        d.onclick = () => selectZip(type, z);
-        box.appendChild(d);
-      });
+    if (!ZIP_INDEX || val.length < 2) return;
+
+    const key = val.slice(0,2);
+    const list = ZIP_INDEX[key] || [];
+
+    list.slice(0,6).forEach(item => {
+      const div = document.createElement("div");
+      div.className = "result";
+      div.textContent = `${item.city}, ${item.state}`;
+      div.onclick = () => selectZip(type, item);
+      box.appendChild(div);
+    });
   }
 
-  function selectZip(type, z){
-    const label = `${z.city}, ${z.state}`;
+  function selectZip(type, item){
+    const label = `${item.city}, ${item.state}`;
+
     if(type === "from"){
       state.from = label;
       enable("fromNext");
     }
+
     if(type === "to"){
       state.to = label;
       enable("toNext");
@@ -77,23 +108,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function enable(id){
-    const b = document.getElementById(id);
-    b.disabled = false;
-    b.classList.remove("disabled");
+    const btn = document.getElementById(id);
+    btn.disabled = false;
+    btn.classList.remove("disabled");
   }
 
-  document.getElementById("fromZip").oninput = e => zipSearch(e.target.value,"from");
-  document.getElementById("toZip").oninput = e => zipSearch(e.target.value,"to");
+  document.getElementById("fromZip").addEventListener("input", e => {
+    zipSearch(e.target.value, "from");
+  });
 
-  document.getElementById("fromNext").onclick = next;
-  document.getElementById("toNext").onclick = next;
+  document.getElementById("toZip").addEventListener("input", e => {
+    zipSearch(e.target.value, "to");
+  });
 
-  /* -------- LOADING -------- */
+  document.getElementById("fromNext").addEventListener("click", next);
+  document.getElementById("toNext").addEventListener("click", next);
+
+  /* =========================
+     LOADING SCREEN
+  ========================= */
   function runLoading(){
     const text = document.getElementById("loadingText");
-    let p = 0;
+    let percent = 0;
 
-    const msgs = [
+    const messages = [
       "Thank you! One moment please…",
       "Connecting you to movers in your area…",
       "Locating licensed movers near you…",
@@ -103,23 +141,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     show(current);
 
-    const i = setInterval(() => {
-      p++;
-      text.innerText =
-        p < 25 ? msgs[0] :
-        p < 45 ? msgs[1] :
-        p < 65 ? msgs[2] :
-        p < 85 ? msgs[3] : msgs[4];
+    const interval = setInterval(() => {
+      percent++;
 
-      if(p >= 100){
-        clearInterval(i);
+      if (percent < 25) text.innerText = messages[0];
+      else if (percent < 45) text.innerText = messages[1];
+      else if (percent < 65) text.innerText = messages[2];
+      else if (percent < 85) text.innerText = messages[3];
+      else text.innerText = messages[4];
+
+      if (percent >= 100) {
+        clearInterval(interval);
         next();
       }
     }, 30);
   }
 
-  document.getElementById("nameNext").onclick = next;
-  document.getElementById("phoneNext").onclick = next;
+  /* =========================
+     NAME + PHONE
+  ========================= */
+  document.getElementById("nameNext").addEventListener("click", next);
+  document.getElementById("phoneNext").addEventListener("click", next);
 
+  /* =========================
+     INIT
+  ========================= */
   show(current);
+
 });
