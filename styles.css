@@ -1,113 +1,57 @@
-:root{
-  --purple:#5a2aa5;
-  --orange:#ff8a00;
-  --bg:#f5f6fa;
-  --text:#111;
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
 }
 
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+.container {
+  max-width: 420px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
 }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  padding:12px 16px;
-  background:#fff;
-  border-bottom:1px solid #ddd;
+.screen {
+  display: none;
+  text-align: center;
 }
 
-#app{
-  max-width:420px;
-  margin:20px auto;
-  padding:16px;
+.screen.active {
+  display: block;
 }
 
-.screen{
-  display:none;
-  background:#fff;
-  padding:20px;
-  border-radius:6px;
-  box-shadow:0 4px 12px rgba(0,0,0,.1);
+button {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 16px;
 }
 
-.screen.active{display:block}
-
-h1{
-  font-size:20px;
-  margin-bottom:10px;
+.primary {
+  background: purple;
+  color: white;
+  border: none;
 }
 
-.choice{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  font-size:16px;
-  border:2px solid var(--purple);
-  background:#fff;
-  cursor:pointer;
+.zip-results {
+  border: 1px solid #ccc;
 }
 
-.primary{
-  width:100%;
-  padding:14px;
-  margin-top:14px;
-  background:var(--orange);
-  border:none;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
+.zip-option {
+  padding: 8px;
+  cursor: pointer;
 }
 
-input{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  font-size:16px;
+.zip-option:hover {
+  background: #eee;
 }
 
-.loading{
-  text-align:center;
+.progress {
+  height: 10px;
+  background: #ddd;
 }
 
-.spinner{
-  width:48px;
-  height:48px;
-  border:5px solid #ddd;
-  border-top-color:var(--purple);
-  border-radius:50%;
-  margin:20px auto;
-  animation:spin 1s linear infinite;
-}
-
-@keyframes spin{
-  to{transform:rotate(360deg)}
-}
-
-.tcpa{
-  font-size:11px;
-  margin-top:10px;
-  color:#555;
-}
-
-.results{
-  border:1px solid #ccc;
-  margin-top:6px;
-}
-.result{
-  padding:10px;
-  background:#fff;
-  cursor:pointer;
-}
-.result:hover{
-  background:#f0f0f0;
-}
-.primary.disabled{
-  opacity:0.5;
-  cursor:not-allowed;
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: orange;
 }
