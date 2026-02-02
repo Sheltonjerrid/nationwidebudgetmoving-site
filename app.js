@@ -1,36 +1,54 @@
-const screens = document.querySelectorAll('.screen');
-let current = 0;
+document.addEventListener("DOMContentLoaded", () => {
+  const screens = document.querySelectorAll(".screen");
+  let current = 0;
 
-function show(i) {
-  screens[current].classList.remove('active');
-  current = i;
-  screens[current].classList.add('active');
-}
+  const state = {
+    from: null,
+    to: null
+  };
 
-function next(val) {
-  show(current + 1);
-}
+  function showScreen(i) {
+    screens[current].classList.remove("active");
+    current = i;
+    screens[current].classList.add("active");
+  }
 
-function saveDate() {
-  show(current + 1);
-}
+  window.next = function () {
+    showScreen(current + 1);
+  };
 
-let percent = 0;
-function startLoading() {
-  const texts = [
-    "Thank you…",
-    "Finding movers in your area…",
-    "Matching availability…",
-    "Almost done…"
-  ];
-  const interval = setInterval(() => {
-    percent++;
-    document.getElementById('percent').innerText = percent + "%";
-    document.getElementById('loadingText').innerText =
-      texts[Math.floor(Math.random() * texts.length)];
-    if (percent >= 100) {
-      clearInterval(interval);
-      show(current + 1);
-    }
-  }, 40);
-}
+  // ZIP AUTOCOMPLETE
+  function setupZip(inputId, listId, onSelect) {
+    const input = document.getElementById(inputId);
+    const list = document.getElementById(listId);
+
+    input.addEventListener("input", () => {
+      list.innerHTML = "";
+      const val = input.value.trim();
+      if (val.length < 2) return;
+
+      const key = val.substring(0, 2);
+      const matches = ZIP_INDEX?.[key] || [];
+
+      matches.slice(0, 6).forEach(city => {
+        const div = document.createElement("div");
+        div.textContent = city;
+        div.onclick = () => {
+          input.value = city;
+          list.innerHTML = "";
+          onSelect(city);
+          next();
+        };
+        list.appendChild(div);
+      });
+    });
+  }
+
+  setupZip("fromZip", "fromList", city => {
+    state.from = city;
+  });
+
+  setupZip("toZip", "toList", city => {
+    state.to = city;
+  });
+});
