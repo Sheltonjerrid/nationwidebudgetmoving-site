@@ -1,68 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Get Your Quote</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<div class="container">
+<header class="top-bar">
+  <img src="logo.png" class="logo">
+  <a class="phone" href="tel:8778041448">📞 877-804-1448</a>
+</header>
 
-  <div class="screen active">
-    <h2>What type of move?</h2>
-    <button class="primary" data-move-type data-value="local">Local</button>
-    <button class="primary" data-move-type data-value="long">Long Distance</button>
-  </div>
+<div id="app">
 
-  <div class="screen">
-    <h2>Home Size</h2>
-    <button data-home-size data-value="1 Bedroom">1 Bedroom</button>
-    <button data-home-size data-value="2 Bedroom">2 Bedroom</button>
-    <button data-home-size data-value="3+ Bedroom">3+ Bedroom</button>
-  </div>
+  <section class="screen active">
+    <h2>Select Home Size</h2>
+    <button onclick="next('Studio')">Studio</button>
+    <button onclick="next('1 Bedroom')">1 Bedroom</button>
+    <button onclick="next('2 Bedroom')">2 Bedroom</button>
+    <button onclick="next('3 Bedroom')">3 Bedroom</button>
+    <button onclick="next('4+ Bedroom')">4+ Bedroom</button>
+  </section>
 
-  <div class="screen">
-    <h2>Move Date</h2>
+  <section class="screen">
+    <h2>Select Move Date</h2>
     <input type="date" id="moveDate">
-  </div>
+    <button onclick="saveDate()">Next</button>
+  </section>
 
-  <div class="screen">
+  <section class="screen">
     <h2>Moving From</h2>
-    <input id="fromZip" placeholder="ZIP or City">
-    <div id="fromZipResults" class="zip-results"></div>
-  </div>
+    <input id="fromZip" placeholder="ZIP Code">
+    <div id="fromList" class="dropdown"></div>
+  </section>
 
-  <div class="screen">
+  <section class="screen">
     <h2>Moving To</h2>
-    <input id="toZip" placeholder="ZIP or City">
-    <div id="toZipResults" class="zip-results"></div>
-  </div>
+    <input id="toZip" placeholder="ZIP Code">
+    <div id="toList" class="dropdown"></div>
+  </section>
 
-  <div class="screen">
-    <h2>Finding Movers</h2>
-    <div class="progress">
-      <div id="progressBar"></div>
-    </div>
-    <p id="loadingText">Starting…</p>
-    <button id="startLoading" class="hidden"></button>
-  </div>
+  <section class="screen">
+    <h2>Finding Movers…</h2>
+    <div class="loader"></div>
+    <p id="loadingText">Connecting you to movers…</p>
+    <span id="percent">0%</span>
+  </section>
 
-  <div class="screen">
-    <h2>Your Info</h2>
-    <form id="leadForm">
-      <input id="name" placeholder="Full Name" required>
-      <input id="phone" placeholder="Phone Number" required>
-      <button class="primary">Get My Quotes</button>
-    </form>
-  </div>
+  <section class="screen">
+    <h2>Your Quote Is Ready</h2>
+    <input placeholder="First Name">
+    <input placeholder="Last Name">
+    <button onclick="next()">Continue</button>
+  </section>
 
-  <div class="screen">
-    <h2>Thank You!</h2>
-    <p>A mover will contact you shortly.</p>
-  </div>
+  <section class="screen">
+    <h2>Enter Your Phone</h2>
+    <input placeholder="Phone Number">
+    <button onclick="alert('Thank you! Movers will contact you shortly.')">
+      View My Quote
+    </button>
+  </section>
 
 </div>
 
+<script src="zipdata.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
