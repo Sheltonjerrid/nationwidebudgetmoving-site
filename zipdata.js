@@ -1,26 +1,17 @@
 let ZIP_INDEX = null;
 
-fetch('zip-index.json')
-  .then(r => r.json())
-  .then(d => ZIP_INDEX = d);
+fetch("zip-index.json")
+  .then(res => res.json())
+  .then(data => {
+    ZIP_INDEX = data;
+  });
 
-function setupZip(inputId, listId) {
-  const input = document.getElementById(inputId);
-  const list = document.getElementById(listId);
+function getZipMatches(prefix) {
+  if (!ZIP_INDEX || prefix.length < 2) return [];
+  const key = prefix.substring(0, 2);
+  return ZIP_INDEX[key] || [];
+}
 
-  input.addEventListener('input', () => {
-    list.innerHTML = '';
-    if (!ZIP_INDEX || input.value.length < 2) return;
-
-    const key = input.value.slice(0, 2);
-    (ZIP_INDEX[key] || []).forEach(z => {
-      if (z.zip.startsWith(input.value)) {
-        const div = document.createElement('div');
-        div.innerText = `${z.city}, ${z.state}`;
-        div.onclick = () => show(current + 1);
-        list.appendChild(div);
-      }
-    });
   });
 }
 
