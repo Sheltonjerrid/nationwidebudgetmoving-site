@@ -1,5 +1,9 @@
 services:
-  - type: static
-    name: nationwidebudgetmoving
+  - type: web
+    name: nationwide-budget-moving
     env: static
     staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
