@@ -1,16 +1,28 @@
-// zipdata.js
-// Option B: local ZIP → city/state dataset (expandable)
+let ZIP_INDEX = null;
 
-const ZIP_DATA = [
-  { zip: "331", city: "Miami", state: "FL" },
-  { zip: "330", city: "Hialeah", state: "FL" },
-  { zip: "333", city: "Fort Lauderdale", state: "FL" },
-  { zip: "334", city: "West Palm Beach", state: "FL" },
-  { zip: "902", city: "Beverly Hills", state: "CA" },
-  { zip: "900", city: "Los Angeles", state: "CA" },
-  { zip: "100", city: "New York", state: "NY" },
-  { zip: "112", city: "Brooklyn", state: "NY" },
-  { zip: "606", city: "Chicago", state: "IL" },
-  { zip: "770", city: "Houston", state: "TX" },
-  { zip: "752", city: "Dallas", state: "TX" }
-];
+fetch('zip-index.json')
+  .then(r => r.json())
+  .then(d => ZIP_INDEX = d);
+
+function setupZip(inputId, listId) {
+  const input = document.getElementById(inputId);
+  const list = document.getElementById(listId);
+
+  input.addEventListener('input', () => {
+    list.innerHTML = '';
+    if (!ZIP_INDEX || input.value.length < 2) return;
+
+    const key = input.value.slice(0, 2);
+    (ZIP_INDEX[key] || []).forEach(z => {
+      if (z.zip.startsWith(input.value)) {
+        const div = document.createElement('div');
+        div.innerText = `${z.city}, ${z.state}`;
+        div.onclick = () => show(current + 1);
+        list.appendChild(div);
+      }
+    });
+  });
+}
+
+setupZip('fromZip', 'fromList');
+setupZip('toZip', 'toList');
