@@ -1,16 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
   <title>Nationwide Budget Moving</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <section class="hero">
-    <h1>Nationwide Moving Quotes</h1>
-    <p>Compare licensed & insured movers in minutes.</p>
-    <a href="quote.html" class="primary">Get My Free Quote</a>
-  </section>
+<header class="top-bar">
+  <img src="logo.png" class="logo" alt="Nationwide Budget Moving">
+  <a class="phone" href="tel:8778041448">📞 877-804-1448</a>
+</header>
+
+<main class="hero">
+  <h1>Moving Cost Calculator</h1>
+  <p>Select Your Move Type</p>
+
+  <button class="primary" onclick="startQuote('local')">Local Move</button>
+  <button class="primary" onclick="startQuote('long')">Long-Distance Move</button>
+</main>
+
+<script>
+function startQuote(type) {
+  sessionStorage.setItem('moveType', type);
+  window.location.href = 'quote.html';
+}
+</script>
 
 </body>
 </html>
